@@ -1,0 +1,36 @@
+.box{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.input{
+
+    width: 100%;
+}
+
+.guest-counter-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+  }
+  
+  .guest-counter-section {
+    text-align: center;
+  }
+  
+  .counter-label {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .counter-button {
+    font-size: 18px;
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .counter-value {
+    font-size: 18px;
+    margin: 0 10px;
+  }
+  
