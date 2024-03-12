@@ -9,9 +9,13 @@ import Signin from "./Signin.Signup/Signin";
 import Signup from "./Signin.Signup/Signup";
 import HotelResults from "./Result/HotelResults";
 import HotelSinglepage from "./Result/HotelSinglepage";
+import HotelCheckout from "./Checkoutpage/HotelCheckout";
+import FlightCheckout from "./Checkoutpage/FlightCheckout";
+import DatesProvider from "../Provider";
 export default function App() {
   return (
     <>
+    <DatesProvider>
     <BrowserRouter>
     <Header/>
     
@@ -28,9 +32,12 @@ export default function App() {
     <Route path="/signup" element={<Signup/>}/>
    <Route path="/Bookhotels/:location" element={<HotelResults/>} />
    <Route path="/HotelSinglepage/:id" element={<HotelSinglepage/>}/> 
+   <Route path="/HotelCheckoutPage/:id" element={<HotelCheckout/>}/>
+   <Route path="/FlightCheckoutPage/:id"  element={<FlightCheckout/>}/>
     </Routes>
   
     </BrowserRouter>
+    </DatesProvider>
     </>
   )
 }

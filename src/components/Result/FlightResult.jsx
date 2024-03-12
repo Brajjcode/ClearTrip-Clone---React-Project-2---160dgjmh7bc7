@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState,useEffect } from 'react';
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -231,9 +231,9 @@ function handlePriceRangeFilter(event) {
                     {flight.arrivalTime}
                   </Card.Title>
                   <div>
-                    <Button variant="primary" className='bg-blue-500'>
+             <Link to={`/FlightCheckoutPage/${flight._id}`}> <Button variant="primary" className='bg-blue-500'>
                       ₹{flight.ticketPrice}.00
-                    </Button>
+                    </Button> </Link> 
                   </div>
                 </Card.Body>
               </Card>

@@ -17,7 +17,8 @@ const Header = () => {
       <Container>
  <Link to={'/'}  ><Navbar.Brand href="#" className=' font-sans text-2xl text-orange-500 font-bold pl-10'>Cleartrip</Navbar.Brand></Link>     
         <Navbar.Collapse className="justify-content-end">
-   <Link to={'/signin'}> <Button variant="primary" className=' bg-blue-600'>Login/Logout</Button>{' '}</Link>
+   <Link to={'/signin'}> <Button variant="primary" className=' bg-blue-600'>Login</Button>{' '}</Link>
+   
         </Navbar.Collapse>
       </Container>
     </Navbar>

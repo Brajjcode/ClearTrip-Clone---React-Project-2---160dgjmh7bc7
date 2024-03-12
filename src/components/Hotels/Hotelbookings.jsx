@@ -8,9 +8,16 @@ import { useState,useEffect } from 'react';
 import "./Bookings.css"
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-
+import { useDates } from '../../Provider';
 
 const Hotelbookings = () => {
+
+  const { setDates } =  useDates()
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+ // const navigate = useNavigate();
+
+
   const [adultsCount, setAdultsCount] = useState(1);
   const [childrenCount, setChildrenCount] = useState(0);
   const JwtToken=localStorage.getItem('userToken');
@@ -37,17 +44,30 @@ const Hotelbookings = () => {
     }
   };
  
+  const handleCheckInChange = (date) => {
+    setCheckInDate(date.format('MM/DD/YYYY'));
+    setDates(date, checkOutDate);
+  };
+
+  const handleCheckOutChange = (date) => {
+    setCheckOutDate(date.format('MM/DD/YYYY'));
+    setDates(checkInDate, date);
+  };
+
+
  function Navigate(){
          
             if(!JwtToken){
               navigate('/Signin')
             }
             else{
-                
+              setDates(checkInDate, checkOutDate);
               navigate(`/Bookhotels/${location}`)
             }
  }
 
+ console.log(checkInDate)
+ console.log(checkOutDate)
   return (
     <div className=' container-xl my-5'>
       <div className=' border-spacing-4 pt-8 pb-10 relative px-10'>
@@ -60,13 +80,25 @@ const Hotelbookings = () => {
           <div className='calendar flex flex-row'>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
              <DemoContainer components={['DatePicker']}>
-             <DatePicker label="Checkin" />
+             <DatePicker label="Checkin"
+             
+             value={checkInDate}
+             onChange={handleCheckInChange}
+             inputFormat="MM/dd/yyyy" 
+            // renderDay={(day, _value, DayComponentProps) => DayComponentProps.label}
+             />
              </DemoContainer>
           </LocalizationProvider>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
              <DemoContainer components={['DatePicker']}>
-             <DatePicker label="Checkout" />
+             <DatePicker label="Checkout"
+              
+              value={checkOutDate}
+              onChange={handleCheckOutChange}
+              inputFormat="MM/dd/yyyy"
+             // renderDay={(day, _value, DayComponentProps) => DayComponentProps.label}
+              />
              </DemoContainer>
           </LocalizationProvider>
          
@@ -96,7 +128,7 @@ const Hotelbookings = () => {
       </div>
     </div>
           
-    <Button variant="light" className=' bg-orange-500' onClick={Navigate}>Search Hotel</Button>
+    <Button variant="light" className=' bg-orange-500' onClick={Navigate} disabled={!checkInDate || !checkOutDate}>Search Hotel</Button>
          
       </div>
       
