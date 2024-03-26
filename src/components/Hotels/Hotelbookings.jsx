@@ -9,6 +9,9 @@ import "./Bookings.css"
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 import { useDates } from '../../Provider';
+import Carousel from 'react-bootstrap/Carousel';
+import Card from 'react-bootstrap/Card';
+
 
 const Hotelbookings = () => {
 
@@ -22,6 +25,10 @@ const Hotelbookings = () => {
   const [childrenCount, setChildrenCount] = useState(0);
   const JwtToken=localStorage.getItem('userToken');
   const [location,setLocation]= useState("")
+  const[loader, setloader]= useState(false)
+  const [offerData,setOfferData]=useState([]);
+
+
   const incrementAdults = () => {
     setAdultsCount(adultsCount + 1);
   };
@@ -53,7 +60,29 @@ const Hotelbookings = () => {
     setCheckOutDate(date.format('MM/DD/YYYY'));
     setDates(checkInDate, date);
   };
+  useEffect(()=>{
 
+      
+    async function offer(){
+      setloader(true)
+           
+      const data= await fetch(`https://academics.newtonschool.co/api/v1/bookingportals/offers?filter={"type":"HOTELS"}`,{
+          
+      headers:{
+        'projectID':'f104bi07c490'
+      }
+
+      })
+         const jsondata= await data.json();
+
+         setOfferData(jsondata.data.offers);
+         setloader(false)
+
+    }
+
+    offer();
+
+   },[])
 
  function Navigate(){
          
@@ -68,9 +97,12 @@ const Hotelbookings = () => {
 
  console.log(checkInDate)
  console.log(checkOutDate)
+
+ console.log(offerData)
   return (
-    <div className=' container-xl my-5'>
-      <div className=' border-spacing-4 pt-8 pb-10 relative px-10'>
+    <div className=' container-xl my-5  '>
+      
+      <div className=' border-spacing-4 flex flex-row items-center justify-around pt-44'>
       <div className=' box w-3/6 h-72 bg-gray-50 flex flex-col items-center p-6 gap-1'>
 
         
@@ -131,12 +163,44 @@ const Hotelbookings = () => {
     <Button variant="light" className=' bg-orange-500' onClick={Navigate} disabled={!checkInDate || !checkOutDate}>Search Hotel</Button>
          
       </div>
+
+      <div className=' craousel w-96'>
+
+        {loader?(<div><loader/></div>):(<div>
+
+
+          <Carousel  className=' w-64 '>
+          
+     
+
+        {Array.isArray(offerData)&&offerData.map((offer,index)=>(
+           <Carousel.Item key={index} >
+
+       
+         <Card.Img variant="top"  className=" object-cover h-56 w-64" src={offer.heroUrl} />
+
+         <Carousel.Caption>
+
+          <p className=' text-black font-bold'>{offer.pTx}</p>
+        </Carousel.Caption>
+         
+         
+         </Carousel.Item>
+        ))}
+    
+         </Carousel>
+        </div>)}
+       
       
-
-
-
-      
+      </div> 
+           
       </div>
+
+      
+
+       
+     
+
     </div>
   )
 }

@@ -12,6 +12,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useDates } from '../../Provider';
+import { Link } from 'react-router-dom';
 
 
 
@@ -155,7 +156,7 @@ console.log(Hoteldata);
              <div className=' pt-44 flex flex-row  justify-evenly '>
            <span className=' font-semibold'>Total:</span>   <span className=' font-normal pr-5'> ₹{total}</span>
 
-           <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button>
+       <Link to={"/Finalpayment"}> <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button></Link> 
              </div>
           </div>
          

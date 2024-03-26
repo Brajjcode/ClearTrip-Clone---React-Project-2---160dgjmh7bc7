@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from '../Box/Box'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useState,useEffect } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
 import { BsArrowRight } from "react-icons/bs";
@@ -9,6 +9,9 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import airIndia from "./../Assets/AI.svg"
 import indigo from "./../Assets/UK.svg"
 import Vistara from "./../Assets/UK.svg"
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
@@ -210,7 +213,7 @@ const airportMap = {
 
              <div className=' pt-44 flex flex-row  justify-evenly '>
            <span className=' font-semibold'>Total:</span>   <span className=' font-normal pr-5'> ₹{total}</span>
-           <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button>
+     <Link to={`/Finalpayment`}><Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button></Link>
              </div>
           </div>
 

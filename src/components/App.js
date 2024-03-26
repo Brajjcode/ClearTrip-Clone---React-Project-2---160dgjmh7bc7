@@ -12,6 +12,7 @@ import HotelSinglepage from "./Result/HotelSinglepage";
 import HotelCheckout from "./Checkoutpage/HotelCheckout";
 import FlightCheckout from "./Checkoutpage/FlightCheckout";
 import DatesProvider from "../Provider";
+import Finalpayment from "./Finalpayment/Finalpayment";
 export default function App() {
   return (
     <>
@@ -34,6 +35,7 @@ export default function App() {
    <Route path="/HotelSinglepage/:id" element={<HotelSinglepage/>}/> 
    <Route path="/HotelCheckoutPage/:id" element={<HotelCheckout/>}/>
    <Route path="/FlightCheckoutPage/:id"  element={<FlightCheckout/>}/>
+   <Route path="/Finalpayment" element={<Finalpayment/>}/>
     </Routes>
   
     </BrowserRouter>
