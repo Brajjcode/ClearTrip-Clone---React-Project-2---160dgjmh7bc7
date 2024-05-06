@@ -1,7 +1,7 @@
 import React from 'react'
 import Box from '../Box/Box'
 import { Container } from 'react-bootstrap'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect,useState } from 'react';
 import Image from 'react-bootstrap/Image';
 import { IoIosStar } from "react-icons/io";
@@ -12,13 +12,15 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useDates } from '../../Provider';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 
 
 const HotelCheckout = () => {
 
 const {id}= useParams();
+const{roomID}= useParams();
 const[Hoteldata,SethotelData]=useState([]);
 const tax= 508;
 const [total,setTotal]= useState(0)
@@ -27,10 +29,11 @@ const JwtToken= localStorage.getItem('userToken')
 const [formCompleted, setFormCompleted] = useState(false);
 const [validated, setValidated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [roomPrice, setRoomPrice] = useState(null);
   //  const [formCompleted, setFormCompleted] = useState(false);
   const { checkInDate, checkOutDate } = useDates();
-
-
+   const checkin= `${checkInDate}T10:03:53.554+00:00`
+const navigate= useNavigate();
 
 useEffect(()=>{
 
@@ -46,7 +49,11 @@ useEffect(()=>{
     })
 
     const jsonData= await FetchData.json();
+    
     SethotelData(jsonData.data);
+
+  
+  
 
 
   }
@@ -55,13 +62,26 @@ useEffect(()=>{
 
 },[id,JwtToken])
 
-
+              
 
 useEffect(()=>{
+  
             
-  setTotal(Math.floor(Hoteldata.avgCostPerNight)+tax+otherCharges)
+  setTotal(Math.floor(Hoteldata.avgCostPerNight)+tax+otherCharges+ roomPrice)
 
-},[Hoteldata.avgCostPerNight])
+},[Hoteldata.avgCostPerNight,roomPrice])
+
+useEffect(()=>{
+  if (Hoteldata && Hoteldata.rooms) {
+    const room = Hoteldata.rooms.find(room => room._id === roomID);
+    if (room) {
+      setRoomPrice(room.price);
+    }
+  }
+},[Hoteldata.rooms, roomID])
+
+
+
 const handleFormChange = (event) => {
   const form = event.currentTarget;
   if (form.checkValidity()) {
@@ -72,7 +92,9 @@ const handleFormChange = (event) => {
 };
 
 
-const handleSubmit = (event) => {
+
+
+const handleSubmit = async (event) => {
   const form = event.currentTarget;
   if (form.checkValidity() === false) {
     event.preventDefault();
@@ -83,7 +105,32 @@ const handleSubmit = (event) => {
     // Form is valid, navigate to the checkout page
     //history.push("/checkout"); // Assuming you have defined 'history' using useHistory()
   //  Navigate('/')
+        const fetchdata= await fetch(`https://academics.newtonschool.co/api/v1/bookingportals/booking`,{
+              
+             method:'POST',
+             Headers:{
+              "content-type":"application/json",
+              Authorization: `Bearer ${JwtToken}`,
+              'projectID':'f104bi07c490'
+             },
+
+             body:JSON.stringify({
+              "bookingType":"hotel",
+
+              "bookingDetails" : {
+                "hotelId": `${id}`,
+                "startDate": `${checkInDate}T10:03:53.554+00:00`, // Start Travel Date and Time
+                "endDate": `${checkOutDate}T10:03:53.554+00:00`// End Travel Date and Time
+          }            
+
+             })
+        })
+
+
+  navigate('/Finalpayment')
+
   alert("ticket booked")
+  console.log(fetchdata);
 }
 
 setValidated(true);
@@ -92,12 +139,10 @@ setShowAlert(false);
 };
 
 
-console.log("checkindate",(checkInDate))
-console.log("checkindate",(checkOutDate))
 
 
-console.log(Hoteldata);
 
+console.log(roomPrice);
   return (
     <>
         
@@ -109,7 +154,7 @@ console.log(Hoteldata);
         
       
         <div className=' flex flex-row mt-6'>
-          <div className=' w-6/12] h-72 border-box'  style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
+          <div className=' w-6/12] h-96 border-box relative'  style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
                   
           <div className='  flex flex-row gap-14 h-12'>
          <span className=' font-bold text-lg  '>{Hoteldata.name}-{Hoteldata.location}</span>   
@@ -131,13 +176,18 @@ console.log(Hoteldata);
 
         </div>
       
-        <div className=' w-60 h-72 border-box ' style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
+        <div className=' w-60 h-80 border-box relative ' style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
             <div className=' flex flex-row justify-around'>
             <span className=' font-semibold' > Base Price:</span> <span className=' pr-2'>₹{Math.floor(Hoteldata.avgCostPerNight)}</span>
             
                
           
             </div>
+           <div className=' flex flex-row justify-around'>
+           <span className=' font-semibold' > Room Price:</span> <span>₹{roomPrice}</span>
+
+           </div>
+
             <div className=' flex flex-row justify-around'>
             <span className=' font-semibold' > Tax:</span> <span>₹{tax}</span>
             
@@ -156,7 +206,8 @@ console.log(Hoteldata);
              <div className=' pt-44 flex flex-row  justify-evenly '>
            <span className=' font-semibold'>Total:</span>   <span className=' font-normal pr-5'> ₹{total}</span>
 
-       <Link to={"/Finalpayment"}> <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button></Link> 
+        <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button>
+        
              </div>
           </div>
          

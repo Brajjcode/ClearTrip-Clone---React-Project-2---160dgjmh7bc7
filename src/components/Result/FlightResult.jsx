@@ -151,11 +151,11 @@ function handlePriceRangeFilter(event) {
       <div>Loading...</div>
     ) : ( 
       <div>
-        <div className='  ml-3 mt-20 position-fixed'>
+        <div className='  ml-3 mt-20 position-fixed z-10'>
         <Dropdownjsx   name="Sort By Departure" item1="Earliest Departure" item2="Latest Departure" value1="Earliest Departure" value2="Latest Departure"  onselectoption={handlechange}  />
         </div>
-      <div className=' flex flex-row justify-center items-center gap-5'>
-              <div className=''>
+      <div className=' flex flex-row justify-center items-center gap-5 max-sm: flex-col'>
+              <div className=' '>
          <Nav defaultActiveKey="/home" className="flex-column w-96 h-96 mt-5   ">
          <Accordion defaultActiveKey="0" className=' position-fixed top-40 left-4 w-72 ' >
       <Accordion.Item eventKey="0">
@@ -201,11 +201,11 @@ function handlePriceRangeFilter(event) {
       <div className='flex items-center justify-center '>
 
 
-        <div className='flex flex-col items-center justify-center gap-4 mt-10 '>
+        <div className='flex flex-col items-center justify-center gap-4 mt-20 '>
           
           {flightData.data && flightData.data.flights ? (
             flightData.data.flights.map((flight) => (
-              <Card key={flight.flightID}>
+              <Card key={flight.flightID} className=' border-2 rounded-xl shadow-lg shadow-slate-200'>
                 <Card.Header>Enjoy Free Meal</Card.Header>
                 <Card.Body className='flex flex-row items-center gap-10  '>
                   <Row className='flex flex-row'>
@@ -221,7 +221,7 @@ function handlePriceRangeFilter(event) {
                       <MdFlightTakeoff />
                       {flight.departureTime}
                     </Card.Title>
-                    <div className=' flex flex-col'><span>|</span>
+                    <div className=' flex flex-col'>
                       <span>duration:{flight.duration}hrs</span>
                       <span>stops:{flight.stops}</span>
                     </div>

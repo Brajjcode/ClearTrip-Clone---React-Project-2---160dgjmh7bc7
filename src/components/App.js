@@ -33,7 +33,7 @@ export default function App() {
     <Route path="/signup" element={<Signup/>}/>
    <Route path="/Bookhotels/:location" element={<HotelResults/>} />
    <Route path="/HotelSinglepage/:id" element={<HotelSinglepage/>}/> 
-   <Route path="/HotelCheckoutPage/:id" element={<HotelCheckout/>}/>
+   <Route path="/HotelCheckoutPage/:id/:roomID" element={<HotelCheckout/>}/>
    <Route path="/FlightCheckoutPage/:id"  element={<FlightCheckout/>}/>
    <Route path="/Finalpayment" element={<Finalpayment/>}/>
     </Routes>

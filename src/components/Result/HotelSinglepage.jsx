@@ -101,7 +101,7 @@ const HotelSinglepage = () => {
                    <div className=' pt-5 font-semibold'>₹{room.costDetails.baseCost}+<span className=' text-sm font-thin'>₹{room.costDetails.taxesAndFees} tax/night</span></div>
               
 
-        <Link to={`/HotelCheckoutPage/${id}`} >  <Button variant="danger" className=' bg-red-500'>Book</Button></Link> 
+        <Link to={`/HotelCheckoutPage/${id}/${room._id}`} >  <Button variant="danger" className=' bg-red-500'>Book</Button></Link> 
 
              </Card.Body>
            </Card>

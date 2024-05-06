@@ -1,6 +1,6 @@
 import React from 'react'
 import Box from '../Box/Box'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useState,useEffect } from 'react'
 import { Container, Spinner } from 'react-bootstrap'
 import { BsArrowRight } from "react-icons/bs";
@@ -20,6 +20,7 @@ import Col from 'react-bootstrap/Col';
 //import InputGroup from 'react-bootstrap/InputGroup';
 import { Navigate } from 'react-router-dom'
 import Row from 'react-bootstrap/Row';
+import { useDates } from '../../Provider';
 
 const FlightCheckout = () => {
 
@@ -35,9 +36,12 @@ const FlightCheckout = () => {
     const [validated, setValidated] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [formCompleted, setFormCompleted] = useState(false);
-
+    const { checkInDate, checkOutDate } = useDates();
+   // const [landingDate, setLandingDate] = useState(null); 
+   const {landingDate} = useDates();
     
      const[loader,setloader]= useState(true)
+     const navigate= useNavigate();
   //  const airport=["Kempegowda International Airport, Bangalore, Terminal 2","Chatrapati Shivaji Airport, Mumbai, Terminal 2","Indira Gandhi International Airport","Netaji Subhas Chandra Bose International Airport","Madras International Meenambakkam Airport"];
 //    const flightImages=[airIndia,indigo,Vistara]
 const airportMap = {
@@ -97,7 +101,7 @@ const airportMap = {
       }
     };
     
- 
+    
     
 
       const handleSubmit = (event) => {
@@ -111,12 +115,14 @@ const airportMap = {
           // Form is valid, navigate to the checkout page
           //history.push("/checkout"); // Assuming you have defined 'history' using useHistory()
         //  Navigate('/')
+        navigate('/Finalpayment')
         alert("ticket booked")
       }
   
     setValidated(true);
     setShowAlert(false);
         setValidated(true);
+
       };
 
     
@@ -131,8 +137,7 @@ const airportMap = {
     };
   
 
-    console.log(Flightdata);
-
+   console.log("landingdate",landingDate);
 
 
 
@@ -213,7 +218,7 @@ const airportMap = {
 
              <div className=' pt-44 flex flex-row  justify-evenly '>
            <span className=' font-semibold'>Total:</span>   <span className=' font-normal pr-5'> ₹{total}</span>
-     <Link to={`/Finalpayment`}><Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button></Link>
+     <Button variant="danger " className=' bg-orange-700 mb-7' onClick={handleSubmit} disabled={!formCompleted}>Book</Button>
              </div>
           </div>
 

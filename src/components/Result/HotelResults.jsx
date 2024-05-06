@@ -178,7 +178,7 @@ const HotelResults = () => {
             <Card.Text>
                
             </Card.Text>
-
+   
             <div className=' text-sm font-black'>₹{hotel.avgCostPerNight.toFixed(2)}</div>
             {/* <Button variant="primary" className=' bg-orange-700'> </Button> */}
           </Card.Body></Link> 
