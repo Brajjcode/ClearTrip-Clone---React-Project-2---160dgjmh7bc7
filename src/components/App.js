@@ -13,17 +13,38 @@ import HotelCheckout from "./Checkoutpage/HotelCheckout";
 import FlightCheckout from "./Checkoutpage/FlightCheckout";
 import DatesProvider from "../Provider";
 import Finalpayment from "./Finalpayment/Finalpayment";
+import { Authprovider } from "./AuthContext";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+//import ProtectedRoute from "./Protectedroute/ProtectedRoute";
+//import ProtectedRoute from "./Protectedroute/ProtectedRoute";
 export default function App() {
+  const PrivateRoute = ({ children }) => {
+    const { isLoggedIn } = useAuth();
+  
+    if (!isLoggedIn) {
+      return <Navigate to="/signin" replace />;
+    }
+  
+    return children;
+  };
+
+  const LoginRoute=({children})=>{
+    const {isLoggedIn}= useAuth();
+    if(isLoggedIn){
+      return <Navigate to="/" replace/>
+    }
+
+    return children;
+  };
   return (
     <>
+    <Authprovider>
     <DatesProvider>
     <BrowserRouter>
     <Header/>
-    
-    
-     
-       
-    <Routes>
+         
+    {/* <Routes>
       <Route path="/" element={<><SideHeader/><Home/> </>}/>
    
       <Route path="/flightresult/:whereto/:wherefrom/:departureday" element={<FlightResult/>}/>
@@ -36,10 +57,42 @@ export default function App() {
    <Route path="/HotelCheckoutPage/:id/:roomID" element={<HotelCheckout/>}/>
    <Route path="/FlightCheckoutPage/:id"  element={<FlightCheckout/>}/>
    <Route path="/Finalpayment" element={<Finalpayment/>}/>
-    </Routes>
+    </Routes> */}
+      <Routes>
+      <Route
+            path="/"
+            element={
+              <>
+                <SideHeader />
+                <Home />
+              </>
+            }
+          />
+          <Route
+            path="/flightresult/:whereto/:wherefrom/:departureday"
+            element={<PrivateRoute><FlightResult /></PrivateRoute>}
+          />
+          <Route
+            path="/BookHotels"
+            element={
+              <>
+                <SideHeader />
+                <Hotelbookings />
+              </>
+            }
+          />
+          <Route path="/signin" element={<LoginRoute><Signin /></LoginRoute>} />
+          <Route path="/signup" element={<LoginRoute><Signup /></LoginRoute>} />
+          <Route path="/Bookhotels/:location" element={<PrivateRoute><HotelResults /></PrivateRoute>} />
+          <Route path="/HotelSinglepage/:id" element={<PrivateRoute><HotelSinglepage /></PrivateRoute>} />
+          <Route path="/HotelCheckoutPage/:id/:roomID" element={<PrivateRoute><HotelCheckout /></PrivateRoute>} />
+          <Route path="/FlightCheckoutPage/:id" element={<PrivateRoute><FlightCheckout /></PrivateRoute>} />
+          <Route path="/Finalpayment" element={<PrivateRoute><Finalpayment /></PrivateRoute>} />
+        </Routes>
   
     </BrowserRouter>
     </DatesProvider>
+    </Authprovider>
     </>
   )
 }

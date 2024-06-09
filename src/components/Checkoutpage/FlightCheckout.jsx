@@ -118,7 +118,7 @@ const airportMap = {
         navigate('/Finalpayment')
         alert("ticket booked")
       }
-  
+
     setValidated(true);
     setShowAlert(false);
         setValidated(true);

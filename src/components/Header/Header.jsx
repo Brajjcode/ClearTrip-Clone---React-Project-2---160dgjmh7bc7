@@ -9,49 +9,42 @@ import { useNavigate } from 'react-router-dom';
 import Box from "../Box/Box"
 import { Link } from 'react-router-dom';
 
-
+import { useAuth } from '../AuthContext';
 
 const Header = () => {
 
- // const [logintext,setLogintext]= useState("Logout")
-  //const [shouldLogout, setShouldLogout] = useState(false);
- // const navigate= useNavigate()
-// const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('userToken'));
-const [isLoggedIn, setIsLoggedIn] = useState(false);
-const [logintext,setLogintext]= useState("Login");
-//const [token, setToken]= useState(null)
-//const token=localStorage.getItem('userToken');
+ 
+// const [isLoggedIn, setIsLoggedIn] = useState(false);
+const { isLoggedIn, logout } = useAuth();
+
+const token = localStorage.getItem('userToken');
 
   
-  const logout=()=>{
-    localStorage.removeItem('userToken')
-  //  setLogintext("Login");
-  //setToken(null)
-   setIsLoggedIn(false);
-    alert("Logged out successfully")
-   }
+  // const logout=()=>{
+  //   localStorage.removeItem('userToken')
+ 
+  //  setIsLoggedIn(false);
+  //   alert("Logged out successfully")
+  //  }
 
+  //  useEffect(() => {
+  //   const checkToken = () => {
+  //     const token = localStorage.getItem('userToken');
+  //     setIsLoggedIn(!!token);
+  //   };
 
+  //   checkToken(); // Initial check
 
-   useEffect(()=>{
-    //setToken(localStorage.getItem('userToken'))
-    const token = localStorage.getItem('userToken');
-    // if(token){
-    //   setIsLoggedIn(true)
-    //   setLogintext("Login")
-    // }
-    // else{
-    //   setIsLoggedIn(false)
-    //  // setLogintext("Logout")
-    // }
-     
-    setIsLoggedIn(token?true:false)
-  //  setIsLoggedIn(!!token);
+  //   // Listen for storage changes
+  //   window.addEventListener('storage', checkToken);
 
-   },[isLoggedIn])
-    
-  
+  //   // Cleanup the event listener
+  //   return () => {
+  //     window.removeEventListener('storage', checkToken);
+  //   };
+  // }, []); 
    
+  console.log("token",token)
 
   return (
     <div >
@@ -61,9 +54,6 @@ const [logintext,setLogintext]= useState("Login");
  <Link to={'/'}  ><Navbar.Brand href="#" className=' font-sans text-2xl text-orange-500 font-bold pl-10'>Cleartrip</Navbar.Brand></Link>     
         <Navbar.Collapse className="justify-content-end">
 
-    {/* <Button variant="primary" className=' bg-blue-600' onClick={()=>shouldLogout? logout():undefined}>{!shouldLogout?(
-      <Link to="/signin">Login</Link>
-    ):(logintext)}</Button>{' '} */}
 
 
 {isLoggedIn ? (

@@ -29,18 +29,20 @@ import Flight2 from "../Assets/Flight2.webp";
 import Flight3 from "../Assets/Flight3.webp";
 import Flight4 from "../Assets/Flight4.webp";
 import { Navigate } from 'react-router-dom';
-
+import Alert from 'react-bootstrap/Alert';
 
 
 import dayjs from 'dayjs';
 import { useDates } from '../../Provider';
+import { useAuth } from '../AuthContext';
 //import {moment} from ''
+
 
   const Home = () => {
 
      const [wherefrom, setWherefrom]= useState("");
      const [whereTo, setwhereto]= useState("");
-     const[ departureDate, setDeparturedate]=useState('Mon');
+     const[ departureDate, setDeparturedate]=useState('');
      const [landingDate, setLandingDate] = useState(null); 
      const[travelers, setTravlers]= useState('');
      const [travelClass, setTravelclass]= useState('');
@@ -48,10 +50,12 @@ import { useDates } from '../../Provider';
      const[loader, setloader]= useState(false);
      const [buttonText,SetButtonText]= useState("Economy");
      const JwtToken=localStorage.getItem('userToken');
+   
     //  const [endDate,setEndDate]= useState('');
     // const {setDates}= useDates();
     const {setlanding}= useDates();
-
+    const {isLoggedIn}= useAuth();
+    const [showAlert, setShowAlert] = useState(isLoggedIn);
     
      const navigate= useNavigate();
      console.log("departuredate",departureDate)
@@ -90,6 +94,10 @@ import { useDates } from '../../Provider';
 
      },[])
 
+    //  const handleAlertClose = () => {
+      
+    // };
+
     // console.log(currentDate)
          function handleLandingDate(date){
           //  setLandingDate(date.format('YYYY-MM-DD'));
@@ -117,22 +125,42 @@ import { useDates } from '../../Provider';
           navigate(`flightresult/${whereTo}/${wherefrom}/${departureDate}`)
          }
     }
+    useEffect(() => {
+      if (showAlert) {
+        const timer = setTimeout(() => {
+          setShowAlert(false);
+        }, 3000);
+  
+        return () => {
+          clearTimeout(timer);
+        };
+      }
+    }, [showAlert]);
+    const handleAlertClose = () => {
+      setShowAlert(false);
+    };
 
     return (
-      <div className=''>
-      {/* <h1 className=' flex justify-center items-center font-bold'> Book your flight</h1> */}
-      {/* <div className=' container-xl my-5 flex  pt-24 flex-row justify-around'> */}
-
+      <div className='container'>
       <div className='flex-col max-sm:flex-col max-sm:gap-4 gap-12 justify-between px-48 max-sm:px-12 mt-10 bg-white items-center ml-5 '>
+      {showAlert && (
+        <div className=' flex items-center justify-center z-50 absolute '>
+            <div role="alert" class="fade  bg-slate-100 alert alert-primary alert-dismissible show w-96 h-16"  dismissible>
+            <button type="button" class="btn-close" aria-label="Close alert" onClick={handleAlertClose}>X</button>
+            <div class="alert-heading h4">Logged in Sucessfully</div>
+       </div>
+       </div>
 
+      )}
       <div className=' flex flex-row max-sm:flex-col max-sm:gap-4 gap-12 justify-center px-48 max-sm:px-12 mt-10 bg-white  ml-5'>
        <div className=" max-sm: mt-12">
-
-       <h1 className=' text-3xl font-semibold mt-2 max-sm:ml-14'>Search Flights</h1>
-       <h1 class="font-semibold mt-2 text-stone-600 max-sm:ml-12">Enjoy hassle free bookings with Cleartrip</h1>
+      
+       <h1 className=' text-3xl font-semibold mt-2 max-sm: ml-20'>Search Flights</h1>
+       <h1 class="font-semibold mt-2 text-stone-600 max-sm: ml-20">Enjoy hassle free bookings with Cleartrip</h1>
       
       {/* <div className=' border-spacing-4 pt-8 pb-10 relative px-10 ml-14 box w-3/6 h-72 bg-gray-50'> */}
-      <div className='booking-card flex flex-col px-4 py-4 border-2 rounded-xl shadow-lg shadow-slate-200 my-6 relative '> 
+      <div className='booking-card flex flex-col px-4 py-4 border-2 rounded-xl shadow-lg shadow-slate-200 my-6 relative mx-auto max-sm: w-auto p-10 '> 
+      
         
       <div className=' count mb-6 m-auto'>
       <Dropdown onSelect={handleSelect} className=' bg-green-600'>
@@ -203,20 +231,9 @@ import { useDates } from '../../Provider';
              </DemoContainer>
           </LocalizationProvider>
 
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-             <DemoContainer components={['DatePicker']}>
-             <DatePicker label="Landing"
-              
-              value={landingDate}
-              onChange={(date)=>handleLandingDate(date)}
-              inputFormat="MM/dd/yyyy"
-              disablePast
- 
-              />
-             </DemoContainer>
-          </LocalizationProvider> */}
+     
           </div>
-    <Button variant="danger" className=' bg-orange-500' onClick={Navigate} disabled={!departureDate || !whereTo || !wherefrom} >Search Flight</Button>
+    <Button variant="danger" className=' bg-orange-500' onClick={Navigate} disabled={!departureDate || !whereTo || !wherefrom}>Search Flight</Button>
     </div>
       
 

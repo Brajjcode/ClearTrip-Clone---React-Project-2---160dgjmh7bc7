@@ -124,7 +124,7 @@ const Hotelbookings = () => {
 
     <div className='  flex flex-row max-sm:flex-col max-sm:gap-4 gap-12 justify-center px-48 max-sm:px-12 mt-10 bg-white  ml-5'>
      <div className=' max-sm: mt-12'>
-     <h1 className=' text-3xl font-semibold mt-2 max-sm:ml-20'>Search Hotels</h1>
+     <h1 className=' text-3xl font-semibold mt-2 max-sm:ml-20 ml-10'>Search Hotels</h1>
        <h1 class="font-semibold mt-2 text-stone-600 max-sm: ml-12">Enjoy hassle free bookings with Cleartrip</h1>
     
 

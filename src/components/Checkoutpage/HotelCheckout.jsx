@@ -52,10 +52,6 @@ useEffect(()=>{
     
     SethotelData(jsonData.data);
 
-  
-  
-
-
   }
        
   getHoteldata();

@@ -15,11 +15,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {Link , useNavigate}from 'react-router-dom'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Alert from 'react-bootstrap/Alert';
+import { useState } from 'react';
+
+import { useAuth } from '../AuthContext';
 
 function Copyright(props) {
-
-
-
 
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -45,8 +46,13 @@ const darkTheme = createTheme({
   
 
 export default function Signin() {
+  
+  const [showAlert, setShowAlert] = useState(false);
+  
+  const [singin, setSignin] = useState(false);
 
   const navigate= useNavigate();
+  const {login}= useAuth();
 
   React.useEffect(()=>{
     const jwtToken =  localStorage.getItem('token');
@@ -54,6 +60,7 @@ export default function Signin() {
         navigate('/')
     }
 } , [])
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     
@@ -74,14 +81,18 @@ export default function Signin() {
         if(response.ok){
           const responseData= await response.json();
        //   console.log("response data=>",responseData)
-          localStorage.setItem('userToken', responseData.token);
+       login(responseData.token);
+   //       localStorage.setItem('userToken', responseData.token);
           localStorage.setItem('userdata',JSON.stringify(responseData));
-          alert("logged in sucessfully");
+         // alert("logged in sucessfully");
+          setSignin(true);
            navigate("/", { state: { userloggedin: true } });
         }
 
         else{
-          alert('Incorrect username or password');
+          //alert('Incorrect username or password');
+          setShowAlert(true);
+
         }
       }
       catch(error){ 
@@ -163,6 +174,22 @@ export default function Signin() {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+
+        {showAlert && (
+            <div role="alert" class="fade  bg-slate-100 alert alert-primary alert-dismissible show"  dismissible>
+              <button type="button" class="btn-close" aria-label="Close alert" onClick={() => setShowAlert(false)}>X</button>
+              <div class="alert-heading h4">Incorrect username or password</div>
+              <p>Please enter correct username or password</p></div>
+      )}
+      
+      {singin && (
+         <Alert className=' bg-white' onClose={() => setSignin(false)} dismissible>
+         Logged in Successfully
+       </Alert>
+
+      )}
+
+
       </Container>
 
   )};

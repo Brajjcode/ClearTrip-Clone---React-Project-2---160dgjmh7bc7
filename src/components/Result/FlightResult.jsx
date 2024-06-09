@@ -151,12 +151,14 @@ function handlePriceRangeFilter(event) {
       <div>Loading...</div>
     ) : ( 
       <div>
-        <div className='  ml-3 mt-20 position-fixed z-10'>
+        <div className='  ml-3 mt-20 position-fixed z-10 '>
         <Dropdownjsx   name="Sort By Departure" item1="Earliest Departure" item2="Latest Departure" value1="Earliest Departure" value2="Latest Departure"  onselectoption={handlechange}  />
         </div>
-      <div className=' flex flex-row justify-center items-center gap-5 max-sm: flex-col'>
-              <div className=' '>
-         <Nav defaultActiveKey="/home" className="flex-column w-96 h-96 mt-5   ">
+      {/* <div className=' flex flex-row justify-center items-center gap-5 max-sm: flex-col'> */}
+      <div className=' flex flex-col md:flex-row justify-center items-start gap-5 '>
+              <div className='w-full md:w-1/4 mt-5'>
+         {/* <Nav defaultActiveKey="/home" className="flex-column w-96 h-96 mt-5   "> */}
+         <Nav defaultActiveKey="/home" className="flex-column w-full  ">
          <Accordion defaultActiveKey="0" className=' position-fixed top-40 left-4 w-72 ' >
       <Accordion.Item eventKey="0">
         <Accordion.Header>Stops</Accordion.Header>
@@ -205,7 +207,7 @@ function handlePriceRangeFilter(event) {
           
           {flightData.data && flightData.data.flights ? (
             flightData.data.flights.map((flight) => (
-              <Card key={flight.flightID} className=' border-2 rounded-xl shadow-lg shadow-slate-200'>
+              <Card key={flight.flightID} className='border-2 rounded-xl shadow-lg shadow-slate-200'>
                 <Card.Header>Enjoy Free Meal</Card.Header>
                 <Card.Body className='flex flex-row items-center gap-10  '>
                   <Row className='flex flex-row'>
@@ -247,7 +249,132 @@ function handlePriceRangeFilter(event) {
       </div>
     )}
   </>
-  )
+  // <>
+  //     {loader ? (
+  //       <div>Loading...</div>
+  //     ) : (
+  // <div className='flex flex-col md:flex-row justify-center items-start gap-5 mt-5'>
+  //         <div className='w-full md:w-1/4'>
+  //           <div className='sticky top-20'>
+  //             <Dropdownjsx
+  //               name="Sort By Departure"
+  //               item1="Earliest Departure"
+  //               item2="Latest Departure"
+  //               value1="Earliest Departure"
+  //               value2="Latest Departure"
+  //               onselectoption={handlechange}
+  //             />
+  //             <Nav defaultActiveKey="/home" className="flex-column w-full mt-5">
+  //               <Accordion defaultActiveKey="0">
+  //                 <Accordion.Item eventKey="0">
+  //                   <Accordion.Header>Stops</Accordion.Header>
+  //                   <Accordion.Body>
+  //                     <Form.Check
+  //                       type="checkbox"
+  //                       checked={stopsFilter.includes("0")}
+  //                       name="0"
+  //                       label='0 stops'
+  //                       onChange={(e) => handleStopsFilter(e.target.name)}
+  //                     />
+  //                     <Form.Check
+  //                       type="checkbox"
+  //                       name="1"
+  //                       checked={stopsFilter.includes("1")}
+  //                       label="1 stops"
+  //                       onChange={(e) => handleStopsFilter(e.target.name)}
+  //                     />
+  //                   </Accordion.Body>
+  //                 </Accordion.Item>
+  //                 <Accordion.Item eventKey="1">
+  //                   <Accordion.Header>Duration</Accordion.Header>
+  //                   <Accordion.Body>
+  //                     <Form.Check
+  //                       name="1"
+  //                       label="1hr"
+  //                       type="checkbox"
+  //                       checked={duration.includes("1")}
+  //                       onChange={(e) => handledurationFilter(e.target.name)}
+  //                     />
+  //                     <Form.Check
+  //                       name="2"
+  //                       label="2hr"
+  //                       type='checkbox'
+  //                       checked={duration.includes("2")}
+  //                       onChange={(e) => handledurationFilter(e.target.name)}
+  //                     />
+  //                     <Form.Check
+  //                       name='6'
+  //                       label="6hr"
+  //                       type="checkbox"
+  //                       checked={duration.includes("6")}
+  //                       onChange={(e) => handledurationFilter(e.target.name)}
+  //                     />
+  //                   </Accordion.Body>
+  //                 </Accordion.Item>
+  //                 <Accordion.Item eventKey="2">
+  //                   <Accordion.Header>Price</Accordion.Header>
+  //                   <Accordion.Body>
+  //                     <input
+  //                       type='range'
+  //                       min="2000"
+  //                       max="2500"
+  //                       value={priceRangeFilter.max}
+  //                       onChange={handlePriceRangeFilter}
+  //                     />
+  //                     {priceRangeFilter.min}-{priceRangeFilter.max}
+  //                   </Accordion.Body>
+  //                 </Accordion.Item>
+  //               </Accordion>
+  //             </Nav>
+  //           </div>
+  //         </div>
+
+  //         <div className='flex flex-col items-center w-full md:w-3/4'>
+  //           <div className='flex flex-col items-center justify-center gap-4'>
+  //             {flightData.data && flightData.data.flights ? (
+  //               flightData.data.flights.map((flight) => (
+  //                 <Card key={flight.flightID} className='w-full border-2 rounded-xl shadow-lg'>
+  //                   <Card.Header>Enjoy Free Meal</Card.Header>
+  //                   <Card.Body className='flex flex-col md:flex-row items-center gap-4'>
+  //                     <Row className='flex flex-row items-center'>
+  //                       <Col xs={4} md={2}>
+  //                         <Image src={AirIndia} thumbnail />
+  //                       </Col>
+  //                       <Col xs={8} md={10}>
+  //                         <Card.Text className='font-light'>{flight.flightID}</Card.Text>
+  //                         <div className='flex flex-row gap-3'>
+  //                           <Card.Title>
+  //                             <MdFlightTakeoff />
+  //                             {flight.departureTime}
+  //                           </Card.Title>
+  //                           <div className='flex flex-col'>
+  //                             <span>duration: {flight.duration} hrs</span>
+  //                             <span>stops: {flight.stops}</span>
+  //                           </div>
+  //                         </div>
+  //                         <Card.Title>
+  //                           <MdFlightLand />
+  //                           {flight.arrivalTime}
+  //                         </Card.Title>
+  //                       </Col>
+  //                     </Row>
+  //                     <Link to={`/FlightCheckoutPage/${flight._id}`}>
+  //                       <Button variant="primary" className='bg-blue-500'>
+  //                         ₹{flight.ticketPrice}.00
+  //                       </Button>
+  //                     </Link>
+  //                   </Card.Body>
+  //                 </Card>
+  //               ))
+  //             ) : (
+  //               <div>No flights available</div>
+  //             )}
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </>
+)
   
 }
 
