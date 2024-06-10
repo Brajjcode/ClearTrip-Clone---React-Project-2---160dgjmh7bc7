@@ -54,8 +54,9 @@ import { useAuth } from '../AuthContext';
     //  const [endDate,setEndDate]= useState('');
     // const {setDates}= useDates();
     const {setlanding}= useDates();
-    const {isLoggedIn}= useAuth();
-    const [showAlert, setShowAlert] = useState(isLoggedIn);
+    const {isLoggedIn,setIsLoggedIn,alert,setShowAlert}= useAuth();
+    const [showAlert, setLocalShowAlert] = useState(false);
+ 
     
      const navigate= useNavigate();
      console.log("departuredate",departureDate)
@@ -125,20 +126,29 @@ import { useAuth } from '../AuthContext';
           navigate(`flightresult/${whereTo}/${wherefrom}/${departureDate}`)
          }
     }
-    useEffect(() => {
-      if (showAlert) {
-        const timer = setTimeout(() => {
-          setShowAlert(false);
-        }, 3000);
+    // useEffect(() => {
+    //   if (showAlert) {
+    //     const timer = setTimeout(() => {
+    //       setLocalShowAlert(false);
+    //     }, 3000);
   
-        return () => {
-          clearTimeout(timer);
-        };
-      }
-    }, [showAlert]);
+    //     return () => {
+    //       clearTimeout(timer);
+    //     };
+    //   }
+    // }, [showAlert]);
     const handleAlertClose = () => {
-      setShowAlert(false);
+      setLocalShowAlert(false);
+      //setShowAlert(false);
     };
+
+    useEffect(() => { 
+     const alertFlag = localStorage.getItem('showAlert');
+      if (alertFlag === 'true') {
+          setLocalShowAlert(true);
+          localStorage.removeItem('showAlert'); 
+      }
+  }, []);
 
     return (
       <div className='container'>

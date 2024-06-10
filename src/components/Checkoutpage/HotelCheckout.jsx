@@ -125,7 +125,7 @@ const handleSubmit = async (event) => {
 
   navigate('/Finalpayment')
 
-  alert("ticket booked")
+
   console.log(fetchdata);
 }
 

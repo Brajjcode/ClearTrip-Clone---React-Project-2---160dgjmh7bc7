@@ -116,7 +116,7 @@ const airportMap = {
           //history.push("/checkout"); // Assuming you have defined 'history' using useHistory()
         //  Navigate('/')
         navigate('/Finalpayment')
-        alert("ticket booked")
+       
       }
 
     setValidated(true);
