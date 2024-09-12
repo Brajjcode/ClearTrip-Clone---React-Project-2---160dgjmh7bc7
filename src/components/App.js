@@ -16,6 +16,7 @@ import Finalpayment from "./Finalpayment/Finalpayment";
 import { Authprovider } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import PreviosBookings from "./PreviosBookings/PreviousBookings"
 //import ProtectedRoute from "./Protectedroute/ProtectedRoute";
 //import ProtectedRoute from "./Protectedroute/ProtectedRoute";
 export default function App() {
@@ -81,8 +82,13 @@ export default function App() {
               </>
             }
           />
+
           <Route path="/signin" element={<LoginRoute><Signin /></LoginRoute>} />
           <Route path="/signup" element={<LoginRoute><Signup /></LoginRoute>} />
+          <Route path="/PreviousBookings" element={<><PrivateRoute>
+            <SideHeader/>
+            <PreviosBookings/>
+            </PrivateRoute></>}/>
           <Route path="/Bookhotels/:location" element={<PrivateRoute><HotelResults /></PrivateRoute>} />
           <Route path="/HotelSinglepage/:id" element={<PrivateRoute><HotelSinglepage /></PrivateRoute>} />
           <Route path="/HotelCheckoutPage/:id/:roomID" element={<PrivateRoute><HotelCheckout /></PrivateRoute>} />

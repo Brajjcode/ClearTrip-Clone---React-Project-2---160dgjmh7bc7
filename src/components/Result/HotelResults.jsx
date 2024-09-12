@@ -10,6 +10,8 @@ import Nav from 'react-bootstrap/Nav';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom';
+//import {}
+import Footer from '../../Footer/Footer';
 
 const HotelResults = () => {
     const[data,setData]= useState([]);
@@ -129,7 +131,7 @@ const HotelResults = () => {
 
 
    <div className=' flex items-center justify-center flex-wrap gap-2'>
-    {data && data.hotels && Array.isArray(data.hotels) && data.hotels.map((hotel)=>(
+    {data && data.hotels && Array.isArray(data.hotels) && data.hotels.length>0?( data.hotels.map((hotel)=>(
           <Card style={{
             width: 280, // Set a fixed width
             height: '100%', // Set a fixed height to make all cards the same height
@@ -184,13 +186,16 @@ const HotelResults = () => {
           </Card.Body></Link> 
         </Card>
     ))
+  ):(<h2>No bookings Available</h2>)
 
     }
    </div>
         
    </div>
    </div>
+   
     </div>
+    
     </>
   )
 }

@@ -60,8 +60,8 @@ const HotelSinglepage = () => {
       
        
           <div className=' Amenities m-8 h-60 w-72 shadow-md   ' >
-            <h1 className=' font-bold text-xl'>Amenities</h1>
-            <div className=' flex flex-wrap gap-2 '>
+            <h1 className=' font-bold text-xl '>Amenities</h1>
+            <div className=' flex flex-wrap gap-2 ml-4 '>
             {Array.isArray(data.amenities)&&data.amenities.map((amenity,index)=>(
               
               <div key={index} className=' flex font-serif w-1/3 pt-4'><span className=' text-green-500'><BiBadgeCheck/></span>{amenity}</div>

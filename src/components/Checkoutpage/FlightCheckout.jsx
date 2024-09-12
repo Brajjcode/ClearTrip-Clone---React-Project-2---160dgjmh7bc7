@@ -21,6 +21,11 @@ import Col from 'react-bootstrap/Col';
 import { Navigate } from 'react-router-dom'
 import Row from 'react-bootstrap/Row';
 import { useDates } from '../../Provider';
+import { useAuth } from '../AuthContext'
+const convertToISOFormat = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString();
+};
 
 const FlightCheckout = () => {
 
@@ -39,7 +44,9 @@ const FlightCheckout = () => {
     const { checkInDate, checkOutDate } = useDates();
    // const [landingDate, setLandingDate] = useState(null); 
    const {landingDate} = useDates();
-    
+   const formattedLandingDate = convertToISOFormat(landingDate);
+   const{flightCount,setFlightCount}= useAuth();
+    const [subtotal,setSubtotal]= useState();
      const[loader,setloader]= useState(true)
      const navigate= useNavigate();
   //  const airport=["Kempegowda International Airport, Bangalore, Terminal 2","Chatrapati Shivaji Airport, Mumbai, Terminal 2","Indira Gandhi International Airport","Netaji Subhas Chandra Bose International Airport","Madras International Meenambakkam Airport"];
@@ -51,6 +58,7 @@ const airportMap = {
   'CCU': 'Netaji Subhas Chandra Bose International Airport',
   'MAA': 'Madras International Meenambakkam Airport'
 };
+
 
 
     useEffect(()=>{
@@ -79,7 +87,7 @@ const airportMap = {
        
       
       
-        console.log("Flightdata",Flightdata.ticketPrice)
+        console.log("Flightdata",Flightdata._id)
         
             
    // setTotal(Flightdata.ticketPrice +tax + otherCharges);
@@ -88,9 +96,13 @@ const airportMap = {
 
     useEffect(()=>{
             
-      setTotal(Flightdata.ticketPrice+tax+otherCharges)
+      // setSubtotal(Flightdata.ticketPrice+tax+otherCharges)
+      // setTotal(subtotal*flightCount)
+      const calculatedSubtotal = Flightdata.ticketPrice + tax + otherCharges;
+      setSubtotal(calculatedSubtotal);
+      setTotal(calculatedSubtotal * flightCount);
 
-    },[Flightdata.ticketPrice])
+    },[Flightdata.ticketPrice,flightCount])
 
     const handleFormChange = (event) => {
       const form = event.currentTarget;
@@ -104,7 +116,7 @@ const airportMap = {
     
     
 
-      const handleSubmit = (event) => {
+      const handleSubmit = async (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
           event.preventDefault();
@@ -115,10 +127,46 @@ const airportMap = {
           // Form is valid, navigate to the checkout page
           //history.push("/checkout"); // Assuming you have defined 'history' using useHistory()
         //  Navigate('/')
-        navigate('/Finalpayment')
+        //const flightID
+       //  const 
+
+        try{
+          const response= await fetch(`https://academics.newtonschool.co/api/v1/bookingportals/booking`,{
+                     method:'POST',
+                     headers:{
+                      'Authorization': `Bearer ${JwtToken}`,
+                      'Content-Type': 'application/json',
+                      'projectID':'f104bi07c490'
+
+                     },
+               body: JSON.stringify({
+                "bookingType":"flight",
+                 "bookingDetails":{
+                  "flightId": id,
+                   "startDate":formattedLandingDate,
+                   "endDate":formattedLandingDate
+                 }
+
+               })
+          })
+          if(!response.ok){
+            throw new Error('Network response was not ok');
+          }
+           
+          const responseData=await response.json();
+          console.log("Booking Successful",responseData);
+          navigate('/Finalpayment')
+
+        }
+        catch(error){
+          console.log("there was a problem in booking",error);
+        }
+      
+
+       // navigate('/Finalpayment')
        
       }
-
+    
     setValidated(true);
     setShowAlert(false);
         setValidated(true);
@@ -137,7 +185,7 @@ const airportMap = {
     };
   
 
-   console.log("landingdate",landingDate);
+   console.log("total",total);
 
 
 
@@ -146,7 +194,7 @@ const airportMap = {
     <>
   {loader?(<div className=' flex items-center justify-center pt-44'><Spinner ></Spinner></div>):
    ( <Box>
-    <Container className=' pt-28 ml-8'>
+    <div className=' pt-28 ml-6'>
 
         <div className=' ml-28'>
         <h1 className=' font-semibold font-serif'> Review your itinerary</h1>
@@ -194,23 +242,32 @@ const airportMap = {
 
          </div>
           
-          <div className=' w-60 h-72 border-box' style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
-            <div className=' flex flex-row justify-around'>
+          <div className=' w-60 h-96 border-box' style={{ boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)'}}>
+            <div className=' flex flex-row justify-around '>
             <span className=' font-semibold' > Base Price:</span> <span className=' pr-2'>₹{Flightdata.ticketPrice}</span>
             
                
           
             </div>
-            <div className=' flex flex-row justify-around'>
+            <div className=' flex flex-row justify-around '>
             <span className=' font-semibold' > Tax:</span> <span>₹{tax}</span>
             
 
           
             </div>
-            <div className=' flex flex-row justify-around'>
+            <div className=' flex flex-row justify-around '>
             <span className=' font-semibold' > Other charges:</span> <span className=' pr-6'>₹{otherCharges}</span>
             
-
+          
+            </div>
+            <div className=' flex flex-row justify-around '>
+            <span className=' font-semibold' > SubTotal:</span> <span className=' pr-1'>₹{subtotal}</span>
+            
+          
+            </div>
+            <div className=' flex flex-row justify-around'>
+            <span className=' font-semibold' > Number of people:</span> <span className=' pr-6'>{flightCount}</span>
+            
           
             </div>
 
@@ -229,7 +286,7 @@ const airportMap = {
 
 
         
-      <div className=' pt-20 w-7/12'>
+      <div className=' pt-20 w-7/12 mb-5'>
         <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
         <Accordion.Header>Enter user details</Accordion.Header>
@@ -296,12 +353,7 @@ const airportMap = {
         </Form.Group>
       </Row>
       <Form.Group className="mb-3">
-        <Form.Check
-          required
-          label="Agree to terms and conditions"
-          feedback="You must agree before submitting."
-          feedbackType="invalid"
-        />
+      
       </Form.Group>
 
     </Form>
@@ -370,7 +422,7 @@ const airportMap = {
     </div>
 
 
-    </Container>
+    </div>
     </Box>
 )}
     </>

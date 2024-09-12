@@ -10,6 +10,10 @@ export const useAuth=()=>{
 export const Authprovider=({children})=>{
     const [isLoggedIn,setIsLoggedIn]= useState(false);
     const[alert,setShowalert]=useState(false);
+    const [flightCount,setFlightCount]= useState(1);
+    const [origin,setorigin]=useState("");
+    const[destination,setDestination]=useState("");
+    const[travellingDate,SetTravellingdate]=useState();
 
     useEffect(() => {
         const token = localStorage.getItem('userToken');
@@ -45,7 +49,7 @@ export const Authprovider=({children})=>{
       
 
       return(
-        <AuthContext.Provider value={{ isLoggedIn, login, logout,setIsLoggedIn,alert,setShowalert,alert,setShowalert}}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout,setIsLoggedIn,alert,setShowalert,setFlightCount,flightCount,origin,setorigin,destination,setDestination,travellingDate,SetTravellingdate}}>
             {children}
         </AuthContext.Provider>
       )

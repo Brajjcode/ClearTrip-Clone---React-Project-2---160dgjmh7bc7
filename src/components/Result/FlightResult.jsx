@@ -19,6 +19,10 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import { Checkbox } from '@mui/material';
 import { FaPooStorm } from 'react-icons/fa';
+import { useDates } from '../../Provider';
+import { useAuth } from '../AuthContext';
+import { FaArrowRightLong } from "react-icons/fa6";
+
 
 
 
@@ -29,6 +33,10 @@ const FlightResult = (props) => {
   const[flightData,setFlightdata]=useState([]);
  // const[duration,setduration]=useState('')
   const[loader,setloader]= useState(false);
+  const {landingDate,setlanding}= useDates();
+  const{origin,setorigin,destination,setDestination}=useAuth();
+
+
 
   const [stopsFilter, setStopsFilter] = useState([]);
   const [priceFilter, setPriceFilter] = useState([]);
@@ -167,6 +175,7 @@ function handlePriceRangeFilter(event) {
             
             <Form.Check type="checkbox" checked={stopsFilter.includes("0")} name="0" label='0 stops' onChange={(e) => handleStopsFilter(e.target.name)} /> 
             <Form.Check type="checkbox" name="1" checked={stopsFilter.includes("1")} label="1 stops" onChange={(e) => handleStopsFilter(e.target.name)} /> 
+            <Form.Check type="checkbox" name="2" checked={stopsFilter.includes("2")} label="2 stops" onChange={(e) => handleStopsFilter(e.target.name)} />
           
           </label>
         </Accordion.Body>
@@ -201,9 +210,31 @@ function handlePriceRangeFilter(event) {
 
           
       <div className='flex items-center justify-center '>
+   
 
+         
+        <div className='flex flex-col items-center justify-center gap-4 mt-20  mb-6'>
+       <div className=' flex flex-row'>
+        <input list="destinationflight" className='border-2 px-2 py-1 rounded-md' style={{ width: '200px', marginRight: '10px' }}
+  placeholder='where from?'value={origin} onChange={()=>e.target.value} disabled
+  
+       
+  />
+  <div className=' pt-2 pr-3 '>
+  <FaArrowRightLong />
+  </div>
+    <input list="destinationflight" className='border-2 px-2 py-1 rounded-md' style={{ width: '200px', marginRight: '10px' }}
+  placeholder='where to?' value={destination} onChange={()=>e.target.value} disabled
+  
 
-        <div className='flex flex-col items-center justify-center gap-4 mt-20 '>
+  />
+   <input list="destinationflight" className='border-2 px-2 py-1 rounded-md' style={{ width: '200px', marginRight: '10px' }}
+  placeholder='Date' value={new Date(landingDate).toDateString()} onChange={()=>e.target.value} disabled
+  
+
+  />
+  </div>
+
           
           {flightData.data && flightData.data.flights ? (
             flightData.data.flights.map((flight) => (

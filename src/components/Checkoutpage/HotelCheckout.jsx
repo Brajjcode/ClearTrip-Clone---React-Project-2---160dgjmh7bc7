@@ -14,6 +14,10 @@ import Row from 'react-bootstrap/Row';
 import { useDates } from '../../Provider';
 // import { Link } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+const convertToISOFormat = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString();
+};
 
 
 
@@ -32,7 +36,9 @@ const [validated, setValidated] = useState(false);
     const [roomPrice, setRoomPrice] = useState(null);
   //  const [formCompleted, setFormCompleted] = useState(false);
   const { checkInDate, checkOutDate } = useDates();
-   const checkin= `${checkInDate}T10:03:53.554+00:00`
+ //  const checkin= `${checkInDate}T10:03:53.554+00:00`
+ const formattedCheckindate=convertToISOFormat(checkInDate);
+ const formattedCheckoutDate= convertToISOFormat(checkOutDate);
 const navigate= useNavigate();
 
 useEffect(()=>{
@@ -101,12 +107,14 @@ const handleSubmit = async (event) => {
     // Form is valid, navigate to the checkout page
     //history.push("/checkout"); // Assuming you have defined 'history' using useHistory()
   //  Navigate('/')
+        
+  try{
         const fetchdata= await fetch(`https://academics.newtonschool.co/api/v1/bookingportals/booking`,{
               
              method:'POST',
-             Headers:{
-              "content-type":"application/json",
-              Authorization: `Bearer ${JwtToken}`,
+             headers:{
+              'Authorization': `Bearer ${JwtToken}`,
+              'Content-Type':"application/json",        
               'projectID':'f104bi07c490'
              },
 
@@ -114,19 +122,30 @@ const handleSubmit = async (event) => {
               "bookingType":"hotel",
 
               "bookingDetails" : {
-                "hotelId": `${id}`,
-                "startDate": `${checkInDate}T10:03:53.554+00:00`, // Start Travel Date and Time
-                "endDate": `${checkOutDate}T10:03:53.554+00:00`// End Travel Date and Time
+                "hotelId": id,
+                "startDate": formattedCheckindate, // Start Travel Date and Time
+                "endDate": formattedCheckoutDate// End Travel Date and Time
           }            
 
              })
         })
+        if(!fetchdata.ok){
+          throw new Error('Network response was not ok');
+        }
+        const response= await fetchdata.json();
+        console.log("Booking Successful",response);
+        navigate('/Finalpayment')
+      }
+
+      catch(error){
+        console.log("there was a problem in booking",error);
+      }
 
 
-  navigate('/Finalpayment')
+  
 
 
-  console.log(fetchdata);
+ // console.log(fetchdata);
 }
 
 setValidated(true);
@@ -143,7 +162,7 @@ console.log(roomPrice);
     <>
         
     <Box>
-    <Container className=' pt-28 ml-8'>
+    <div className=' pt-28 ml-8'>
     <h1 className=' font-semibold font-serif'> Review your itinerary</h1>
 
         <div className=' flex flex-row justify-around '>
@@ -212,7 +231,7 @@ console.log(roomPrice);
         </div>
 
       
-        <div className=' mt-9 w-7/12'>
+        <div className=' mt-9 w-7/12 mb-5'>
         <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
         <Accordion.Header>Enter user details</Accordion.Header>
@@ -281,12 +300,7 @@ console.log(roomPrice);
         </Form.Group>
       </Row>
       <Form.Group className="mb-3">
-        <Form.Check
-          required
-          label="Agree to terms and conditions"
-          feedback="You must agree before submitting."
-          feedbackType="invalid"
-        />
+      
       </Form.Group>
 
     </Form>
@@ -355,7 +369,7 @@ console.log(roomPrice);
     </div>
       
 
-    </Container>
+    </div>
     </Box>
     </>
   )

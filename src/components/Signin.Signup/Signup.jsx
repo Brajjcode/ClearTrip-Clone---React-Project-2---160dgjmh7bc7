@@ -13,6 +13,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {Link,useNavigate} from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
+import { useState } from 'react';
+import { useAuth } from '../AuthContext';
  
 function Copyright(props) {
   return (
@@ -46,7 +49,10 @@ export default function Signup() {
     password:'',
     
   });
- 
+  const {login}=useAuth();
+  const[signupAlert, setSignupAlert]= useState(false);
+
+ const [passwordAlert,setPasswordalert]= React.useState(false)
   React.useEffect(()=>{
         const jwtToken= localStorage.getItem('token')
        
@@ -81,7 +87,8 @@ export default function Signup() {
     event.preventDefault();
    //  console.log(userData)
    if (!userData.password) {
-    alert('Please enter a password.');
+   // alert('Please enter a password.');
+    setPasswordalert(true);
     return;
   }
     try {
@@ -104,12 +111,14 @@ export default function Signup() {
        // console.log("responsedata=>",responseData)
 
         // Store user credentials in local storage
+        login(responseData.token);
         
         localStorage.setItem('userToken', responseData.token);
        // console.log(userData);
         localStorage.setItem('userInfo' , JSON.stringify(userData))
-        alert("Signedup Sucessfully");
-        navigate("/signin")
+        //alert("Signedup Sucessfully");
+        setSignupAlert(true)
+        navigate("/")
 
 
         
@@ -136,8 +145,43 @@ export default function Signup() {
 
 
   };
+  setTimeout(()=>{
+    if(passwordAlert){
+      setPasswordalert(false)
+    }
+    if(signupAlert){
+      setSignupAlert(false)
+    }
+    },3000)
+
+
+    
 
   return (
+    <>
+    {
+      passwordAlert &&(
+        <>
+        <div className=' pt-16 z-10 w-96 flex justify-center items-center '>
+        <Alert key="variant" variant="danger">
+          Please enter a valid password
+        </Alert>
+        </div>
+        </>
+      )}
+      {
+        signupAlert &&(
+          <>
+           <div className=' pt-16 z-10 w-96 flex justify-center items-center '>
+        <Alert key="variant" variant="success">
+          Signedup Sucessfully.
+        </Alert>
+        </div>
+
+          </>
+        )
+      }
+    
   
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -242,5 +286,7 @@ export default function Signup() {
         <Copyright sx={{ mt: 5 }} />
       </Container>
 
+      </>
+              
   );
 }

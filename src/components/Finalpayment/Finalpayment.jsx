@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import gif from "../Assets/success.gif"
 import Image from 'react-bootstrap/Image'
 import { useNavigate } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 
 const Finalpayment = () => {
 
@@ -11,7 +12,7 @@ const Finalpayment = () => {
 
     const timer= setTimeout(()=>{
       navigate('/')
-    },5000)
+    },7000)
 
     return ()=> clearTimeout(timer);
 
@@ -20,7 +21,10 @@ const Finalpayment = () => {
 
   
   return (
-    <div className=' flex items-center justify-center pt-20'>
+    <div className=' flex flex-col items-center justify-center pt-20'>
+      <Alert variant='success' >
+        Your Booking was successful!
+      </Alert>
       <Image src={gif} fluid />
     </div>
   )

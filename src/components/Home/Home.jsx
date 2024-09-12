@@ -30,6 +30,8 @@ import Flight3 from "../Assets/Flight3.webp";
 import Flight4 from "../Assets/Flight4.webp";
 import { Navigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
+import banner from '../Assets/desktop_flights_bsb_travelMax.webp'
+import Footer from '../../Footer/Footer';
 
 
 import dayjs from 'dayjs';
@@ -43,27 +45,48 @@ import { useAuth } from '../AuthContext';
      const [wherefrom, setWherefrom]= useState("");
      const [whereTo, setwhereto]= useState("");
      const[ departureDate, setDeparturedate]=useState('');
-     const [landingDate, setLandingDate] = useState(null); 
+     //const [landingDate, setLandingDate] = useState(null); 
      const[travelers, setTravlers]= useState('');
      const [travelClass, setTravelclass]= useState('');
      const [offerData,setOfferData]=useState([]);
      const[loader, setloader]= useState(false);
      const [buttonText,SetButtonText]= useState("Economy");
      const JwtToken=localStorage.getItem('userToken');
+    // const[]
    
     //  const [endDate,setEndDate]= useState('');
     // const {setDates}= useDates();
-    const {setlanding}= useDates();
-    const {isLoggedIn,setIsLoggedIn,alert,setShowAlert}= useAuth();
+    const {landingDate,setlanding}= useDates();
+    //const{flightCount,setFlightCount}= useAuth();
+    const {isLoggedIn,setIsLoggedIn,alert,setShowAlert,flightCount,setFlightCount,origin,setorigin,destination,setDestination,travellingDate,SetTravellingdate}= useAuth();
     const [showAlert, setLocalShowAlert] = useState(false);
+    const[alertLocation,setalertLocation]=useState(false)
+    const [adultsCount, setAdultsCount] = useState(1);
+
+    setTimeout(()=>{
+      if(alertLocation){
+        setalertLocation(false)
+      }
+    },2000)
  
     
      const navigate= useNavigate();
      console.log("departuredate",departureDate)
-     
+
+     const incrementAdults = () => {
+      setAdultsCount(adultsCount + 1);
+      setFlightCount(adultsCount+1);
+    };
+    const decrementAdults = () => {
+      if (adultsCount > 1) {
+        setAdultsCount(adultsCount - 1);
+        setFlightCount(adultsCount-1);
+      }
+    };
                 
 
      const getDaysOfWeek=(dateString)=>{
+      setlanding(dateString);
       const date= new Date(dateString);
       const days=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -84,6 +107,7 @@ import { useAuth } from '../AuthContext';
         }
 
         })
+
            const jsondata= await data.json();
 
            setOfferData(jsondata.data.offers);
@@ -150,6 +174,57 @@ import { useAuth } from '../AuthContext';
       }
   }, []);
 
+  const airportMap = {
+    'BLR': 'Kempegowda International Airport, Bangalore',
+    'BOM': 'Chatrapati Shivaji Airport, Mumbai',
+    'DEL': 'Indira Gandhi International Airport, New Delhi',
+    'CCU': 'Netaji Subhas Chandra Bose International Airport,Kolkata',
+    'MAA': 'Madras International Meenambakkam Airport, Chennai'
+  };
+  console.log(landingDate,"landingdate");
+
+   const handleInputChange=(e)=>{
+    const inputValue= e.target.value;
+
+    const selectedKey= Object.keys(airportMap).find(
+      key=>airportMap[key]== inputValue
+    );
+
+
+
+    if(selectedKey){
+      setWherefrom(selectedKey);
+
+    }
+    else{
+      setWherefrom(inputValue);
+    }
+    setorigin(e.target.value)
+   }
+
+   const handleInputChangeWhereto=(e)=>{
+    const Value= e.target.value;
+    
+    
+
+    const selectedKey= Object.keys(airportMap).find(
+      key=>airportMap[key]== Value
+    );
+
+    const finalValue = selectedKey || Value;
+    if (wherefrom === finalValue) {
+         setalertLocation(true)
+      
+    }
+     
+    if(wherefrom!==finalValue)
+    {
+    setwhereto(finalValue);
+    }
+   setDestination(e.target.value);
+  
+   }
+
     return (
       <div className='container'>
       <div className='flex-col max-sm:flex-col max-sm:gap-4 gap-12 justify-between px-48 max-sm:px-12 mt-10 bg-white items-center ml-5 '>
@@ -158,10 +233,17 @@ import { useAuth } from '../AuthContext';
             <div role="alert" class="fade  bg-slate-100 alert alert-primary alert-dismissible show w-96 h-16"  dismissible>
             <button type="button" class="btn-close" aria-label="Close alert" onClick={handleAlertClose}>X</button>
             <div class="alert-heading h4">Logged in Sucessfully</div>
-       </div>
+       </div> 
        </div>
 
       )}
+      {
+        alertLocation &&(
+          <Alert key="danger" variant="danger" dismissible className=' flex justify-between w-96'> 
+               <span>Origin and Destination cannot be same!</span>
+        </Alert>
+        )
+      }
       <div className=' flex flex-row max-sm:flex-col max-sm:gap-4 gap-12 justify-center px-48 max-sm:px-12 mt-10 bg-white  ml-5'>
        <div className=" max-sm: mt-12">
       
@@ -172,7 +254,7 @@ import { useAuth } from '../AuthContext';
       <div className='booking-card flex flex-col px-4 py-4 border-2 rounded-xl shadow-lg shadow-slate-200 my-6 relative mx-auto max-sm: w-auto p-10 '> 
       
         
-      <div className=' count mb-6 m-auto'>
+      <div className=' count mb-6 m-auto flex flex-row items-center justify-center gap-7'>
       <Dropdown onSelect={handleSelect} className=' bg-green-600'>
       <Dropdown.Toggle variant="success" id="dropdown-basic">
         1 person, {buttonText}
@@ -186,6 +268,15 @@ import { useAuth } from '../AuthContext';
       </Dropdown.Menu>
     </Dropdown>
 
+    <div className="guest-counter-section flex flex-col items-center">
+    <label className="counter-label">Number of Person:</label>
+    <div className="counter-controls flex flex-row items-center">
+      <Button variant="outline-primary" className=" bg-blue-500 text-white" onClick={incrementAdults}>+</Button>
+      <input type="text" value={adultsCount} className="w-8 p-1 text-center" readOnly />
+      <Button variant="outline-primary" className=" bg-blue-500 text-white" onClick={decrementAdults}>-</Button>
+    </div>
+  </div>
+
       </div>
         
    
@@ -195,29 +286,25 @@ import { useAuth } from '../AuthContext';
     <MdFlightTakeoff/>
      
   <input list="departureFlight" className='border-2 px-2 py-1 rounded-md' style={{ width: '200px', marginRight: '10px' }}
-      placeholder='where from?' onChange={(e)=>setWherefrom(e.target.value)}
-      value={wherefrom}
+      placeholder='where from?' onChange={handleInputChange}
+      value={airportMap[wherefrom] || wherefrom}
   />
   <datalist id='departureFlight' className=' w-6 bg-white text-black'>
-      <option>BLR</option>
-      <option>BOM</option>
-      <option>CCU</option>
-      <option>DEL</option>
-      <option>MAA</option>
+      {Object.keys(airportMap).map((key)=>(
+        <option key={key} value={airportMap[key]}/>
+      ))}
 
   </datalist>
 
   <input list="destinationflight" className='border-2 px-2 py-1 rounded-md' style={{ width: '200px', marginRight: '10px' }}
-  placeholder='where to?' onChange={(e)=>setwhereto(e.target.value)}
-  value={whereTo}
+  placeholder='where to?' onChange={handleInputChangeWhereto}
+  value={airportMap[whereTo]||whereTo}
 
   />
   <datalist id='destinationflight' className=' w-6 bg-white text-black'>
-      <option>BLR</option>
-      <option>BOM</option>
-      <option>CCU</option>
-      <option>DEL</option>
-      <option>HYD</option>
+  {Object.keys(airportMap).map((key)=>(
+        <option key={key} value={airportMap[key]}/>
+      ))}
 
   </datalist>
   
@@ -305,19 +392,32 @@ import { useAuth } from '../AuthContext';
       
       </div>
 
-         <div className=''>
-      <h1 className=' text-2xl font-bold my-4 sm:mt-4 border-l-4 max-sm:my-6 border-orange-500 pl-2 mr-96">'> Card Offers</h1>
+      <div className='flex flex-col items-start gap-4 mb-3 '>
+  <h1 className='text-2xl font-bold mt-4 sm:mt-4  max-sm:my-6 pl-14 '>
+    Card Offers
+  </h1>
+  </div>
+      
+         <div className=' flex flex-col items-center gap-4'>
+     
       <div className=' flex flex-wrap gap-2 justify-center items-center'>
-         <img src={Flight1} className=' w-60'/>
-         <img src={Flight2} className=' w-60 '/>
-         <img src={Flight3} className=' w-60'/>
-         <img src={Flight4} className=' w-60 '/>
+         <img src={Flight1} className=' w-80'/>
+         <img src={Flight2} className=' w-80 '/>
+         <img src={Flight3} className=' w-80'/>
+         <img src={Flight4} className=' w-80 '/>
+         <img src={Flight1} className=' w-80'/>
+         <img src={Flight2} className=' w-80'/>
       </div>
 
-      </div>
-      <div >
-      <h1 className=' text-2xl font-bold my-4 sm:mt-4 border-l-4 max-sm:my-6 border-orange-500 pl-2 mr-96">'> Cleartrip Offers</h1>
-      <div className=' flex flex-wrap gap-2 justify-center items-center'>
+     
+      
+       
+       
+        <div style={{ width: '89%' }}>
+          <img src={banner} className='w-full' />
+        </div>
+      <h1 className=' text-2xl font-bold my-4 sm:mt-4  max-sm:my-6 pl-2 left-8'>Why book on Cleartrip?</h1>
+      {/* <div className=' flex flex-wrap gap-2 justify-center items-center'>
 
           {Array.isArray(offerData) && offerData.slice(0, 9).map((offer)=>(
             <Card style={{
@@ -349,17 +449,98 @@ import { useAuth } from '../AuthContext';
             
 
           ))}
-          </div>
-      </div>
+          </div> */}
+          <div style={ {width: '89%'}}>
+           <p>
+            On Cleartrip.com, you can turn all your plans into trips. From flight ticket bookings, and booking hotels online to airport, rental and outstation cab booking, with Cleartrip, no travel dream is far enough. Fly to your favourite destinations with the best flight offers across various airline options like IndiGo, Air India, SpiceJet, Go First, AirAsia, Vistara, etc. Make the most of your holiday plans by relaxing, rejuvenating and enjoying amazing leisure experiences at our vast range of hotels. From affordable and budget-friendly hotels to the best 5-star properties, book your stay on Cleartrip with unmissable offers. Be it for business travel or pleasure, you can now get the best deals on flights and hotels. So, where to?
+           </p>
+           </div>
+
+           <div className=' pt-4' style={ {width: '89%'}}>
+            <div className=' font-bold' >
+               Booking flights & hotels online with Cleartrip
+            </div>
+            <p>
+            From queries to itineraries, for all things travel, there is Cleartrip. Checking your flight updates and PNR status is easy with our simple, intuitive app and booking site. Booking online hotels gets seamless with a range of choices and the greatest hotel deals.
+            </p>
+            <p className=' pt-4'>
+            Here’s why booking flights and hotels with Cleartrip is your Clear Advantage:
+            </p>
+              
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            ClearChoice Max:
+            </span>
+               <span>
+               Free cancellation or rescheduling for domestic (up to 24 hrs before departure) & international flights (up to 72 hrs before departure).
+               </span>
+            </div>
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            ClearChoice Plus:
+            </span>
+               <span>
+               Free date change or airline change up to 12 hrs (up to 24 hours for Air India*& Vistara*) before departure.
+               </span>
+            </div>
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            Easy hotel cancellation:
+            </span>
+               <span>
+               Cancel your hotel stay easily. Zero fees on hotel cancellations up to 24 hours before check-in on 20k+ hotels.
+               </span>
+            </div>
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            Instant refund initiation: 
+            </span>
+               <span>
+               Cancel your hotel stay easily. Zero fees on hotel cancellations up to 24 hours before check-in on 20k+ hotels.All refunds on flight and hotel cancellations are initiated instantly.
+               </span>
+            </div>
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            Medi-cancel refund:
+            </span>
+               <span>
+               Cancel your domestic flight booking easily on valid medical grounds and get up to ₹3500 against airline cancellation charges per passenger per segment.
+               </span>
+            </div>
+            < div className=' pt-3'>
+            <span className=' font-semibold'>
+            International travel insurance: 
+            </span>
+               <span>
+               Get stress-free coverage against a vast range of uncertainties for all international destinations at only ₹89 per user per day.
+               </span>
+            </div>
+
+           </div>
+           <div className=' pt-8'style={ {width: '89%'}} >
+            <h3 className=' font-semibold'>
+            What are the benefits of booking flights online with Cleartrip?
+            </h3>
+
+            <p className=' pt-2'>
+            Get the best flight fares with exciting flight offers on your air ticket when you book with Cleartrip. Unmissable sales and deals like Travel Max Sale, Big Travel Sale, Cleartrip Tatkaal, etc. offer never-seen-before discounts that help you book flights at affordable rates. Best flight discounts await you when you book with bank cards like ICICI, Bank of Baroda, HDFC, Axis, Kotak etc.
+
+            </p>
+
+           </div>
+
 
       
+
+      </div>
+     
           
       </div>
 
       
 
     
-
+<Footer/>
 
 
       </div>
